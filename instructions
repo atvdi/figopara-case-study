@@ -1,0 +1,18 @@
+Figopara - Case Study
+
+This is a task for technical discussion. Candidates are not expected to fully satisfy all expectations but the majority. Do not be discouraged if you have missed 1-2 expectations.
+
+Expectation:
+ - Complete pagination feature and calculate offset.
+ - By clicking detail button on the pokemon card navigate to detail page (selected pokemon's page).
+ - Fetch pokemon details on the detail page using "useGetPokemonByNameQuery" and fill template with appropriate data.
+ - Use an error handler if necessary.
+ - Add a loading indicator where necessary.
+
+Bonus:
+- Full test coverage.
+- Additional UI improvements and very well-written CSS.
+
+Resources:
+https://redux-toolkit.js.org/rtk-query/overview
+https://ant.design/components/pagination
