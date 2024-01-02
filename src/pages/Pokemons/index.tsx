@@ -1,7 +1,7 @@
 import { useGetPokemonQuery } from "@/services/pokemon";
 import { Button, List, PaginationProps, Space } from "antd";
 import { LikeOutlined, MessageOutlined, StarOutlined } from "@ant-design/icons";
-import { createElement } from "react";
+import { createElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -13,27 +13,36 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
 
 const Pokemons = () => {
   const navigate = useNavigate();
-  const limit = 5;
-  const offset = 0;
-  const { data } = useGetPokemonQuery({ limit, offset });
+  const [limit, setLimit] = useState(10);
+  const [offset, setOffset] = useState(0);
+  const { data, isFetching } = useGetPokemonQuery({ limit, offset });
 
-  const onDetailClick = () => {
-    navigate("/pokemon-detail/name");
+  const onDetailClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    navigate(`/pokemon-detail/${e.currentTarget.id}`);
   };
 
-  const onPageChange: PaginationProps["onChange"] = () => {};
+  const onPageChange: PaginationProps["onChange"] = (page: number) => {
+    setOffset((page - 1) * limit);
+  };
 
-  const onShowSizeChange: PaginationProps["onShowSizeChange"] = () => {};
+  const onShowSizeChange: PaginationProps["onShowSizeChange"] = (
+    _current: number,
+    size: number
+  ) => {
+    setLimit(size);
+  };
 
   return (
     <List
       itemLayout="vertical"
       size="large"
+      loading={isFetching}
       pagination={{
-        total: 27,
+        total: data?.count,
         onChange: onPageChange,
-        pageSize: 5,
+        pageSize: limit,
         onShowSizeChange,
+        showSizeChanger: true,
       }}
       dataSource={data?.results}
       renderItem={pokemon => (
@@ -57,15 +66,12 @@ const Pokemons = () => {
             />,
           ]}
           extra={
-            <Button onClick={onDetailClick} title="Detail">
+            <Button onClick={onDetailClick} title="Detail" id={pokemon.name}>
               Detail
             </Button>
           }
         >
-          <List.Item.Meta
-            title={pokemon.name}
-            description={"Pokemon Description"}
-          />
+          <List.Item.Meta title={pokemon.name} />
         </List.Item>
       )}
     />
